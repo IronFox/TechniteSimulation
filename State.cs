@@ -10,8 +10,14 @@ namespace TechniteSimulation
 	{
 		public readonly Sector.ID SectorID;
 		public readonly int Revision;
-		int value;
+		public int value;
 
+		public State(Sector.ID sid, int rev, int value) 
+		{
+			this.SectorID = sid;
+			this.Revision = rev;
+			this.value = value;
+		}
 		public State(Sector.ID sid, int rev) : this()
 		{
 			this.SectorID = sid;
@@ -29,22 +35,23 @@ namespace TechniteSimulation
 			return obj is State && ((State)obj) == this;
 		}
 
-		internal State Evolve(IEnumerable<State> enumerable, int revision)
+		internal State Evolve(IEnumerable<State> enumerable, State? compareTo)
 		{
-			State rs = new State(SectorID,revision);
 			Random rng = new Random(value);
-			rs.value = value;
+			int outValue = value;
 			bool evolve = rng.NextDouble() < 0.6;
 			foreach (var st in enumerable)
-				if (rng.NextDouble() < 0.12 / Math.Sqrt(SectorID.QuadraticDistanceTo(st.SectorID)))
+				if (rng.NextDouble() < 0.4 / Math.Sqrt(SectorID.QuadraticDistanceTo(st.SectorID)))
 				{
-					rs.value += st.value;
+					outValue += st.value;
 					evolve = true;
 				}
 			if (evolve)
-				rs.value += rng.Next();
+				outValue += rng.Next();
 
-			return rs;
+			return compareTo.HasValue
+					? new State(SectorID, outValue != compareTo.Value.value ? compareTo.Value.Revision + 1 : compareTo.Value.Revision, outValue)
+					: new State(SectorID, 0, outValue);
 		}
 
 

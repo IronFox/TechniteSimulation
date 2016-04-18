@@ -22,21 +22,21 @@ namespace TechniteSimulation
 
 		static int frame = 0;
 
-		private Color GetColor(Sector sector)
+		private Color GetColor(Sector sector, bool colorErrors)
 		{
-			int bad = 10 * sector.depth;
+			int bad = 30 * sector.depth;
 
-			int oldest = sector.commit.Generation - 1;
-			if (sector.commit.otherParents != null)
-				foreach (var n in sector.commit.otherParents)
-				{
-					oldest = Math.Min(oldest, n.Generation);
-				}
-			int age = sector.commit.Generation - oldest - 1;
+			//int oldest = sector.sequence.Generation - 1;
+			//if (sector.commit.otherParents != null)
+			//	foreach (var n in sector.commit.otherParents)
+			//	{
+			//		oldest = Math.Min(oldest, n.Generation);
+			//	}
+			int age = sector.sequence.States.Length - sector.sequence.ConsistentRange;
 
 			
 
-			return Color.FromArgb(Math.Min(255, bad), Math.Min(255, age*10), Math.Min(255, sector.errors * 5));
+			return Color.FromArgb(Math.Min(255, bad), Math.Min(255, age*10), colorErrors ? Math.Min(255, sector.errors) : 0);
 		}
 		public static int refreshCommitCount = 10;
 		private void timer1_Tick(object sender, EventArgs e)
@@ -46,7 +46,7 @@ namespace TechniteSimulation
 			int step = canvas.Width / Program.tables.Length;
 			foreach (var t in Program.tables)
 			{
-				t.Evolve(doEvolve.Checked, frame);
+				t.Evolve(doEvolve.Checked, frame*9082);
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
@@ -58,7 +58,7 @@ namespace TechniteSimulation
 
 		private void PaintTable(SectorTable t, Rectangle rectangle)
 		{
-			
+			bool ce = colorErrors.Checked;
 			float w = (float)rectangle.Width / t.sectors.GetLength(0);
 			float h = (float)rectangle.Height / t.sectors.GetLength(1);
 
@@ -66,7 +66,7 @@ namespace TechniteSimulation
 				for (int y = 0; y < t.sectors.GetLength(0); y++)
 				{
 					Sector s = t.sectors[x, y];
-					graphics.FillRectangle(new SolidBrush(GetColor(s)), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
+					graphics.FillRectangle(new SolidBrush(GetColor(s,ce)), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
 				}
 
 		}

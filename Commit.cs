@@ -11,14 +11,14 @@ namespace TechniteSimulation
 		public readonly Sector.ID ID;
 		public State state;
 
-		public Commit(int gen, int rev, Commit parent, Sector.ID sid)
-		{
-			Generation = gen;
-			Revision = rev;
-			Parent = parent;
-			ID = sid;
-			state = new State(sid);
-		}
+		//public Commit(int gen, int rev, Commit parent, Sector.ID sid)
+		//{
+		//	Generation = gen;
+		//	Revision = rev;
+		//	Parent = parent;
+		//	ID = sid;
+		//	state = new State(sid);
+		//}
 		public override string ToString()
 		{
 			return Generation.ToString() + '/' + Revision;
@@ -86,73 +86,73 @@ namespace TechniteSimulation
 				yield return c.state;
 		}
 
-		internal Commit Update(IEnumerable<Commit> otherParents, ref int depth, ref int errors)
-		{
-			List<Commit> newList = new List<Commit>();
-			HashSet<Commit> newSet = new HashSet<Commit>();
-			foreach (var c in AtGeneration(otherParents, Generation - 1))
-			{
-				newList.Add(c);
-				newSet.Add(c);
-			}
-			if (this.otherParents != null)
-			{
-				HashSet<Commit> oldSet = new HashSet<Commit>();
-				bool allGood = true;
-				foreach (var p in this.otherParents)
-				{
-					if (!newSet.Contains(p))
-						allGood = false;
-					oldSet.Add(p);
-				}
-				if (allGood)
-					foreach (var p in newList)
-					{
-						if (!oldSet.Contains(p))
-						{
-							allGood = false;
-							break;
-						}
-					}
-				if (allGood)
-					return this;
+		//internal Commit Update(IEnumerable<Commit> otherParents, ref int depth, ref int errors)
+		//{
+		//	List<Commit> newList = new List<Commit>();
+		//	HashSet<Commit> newSet = new HashSet<Commit>();
+		//	foreach (var c in AtGeneration(otherParents, Generation - 1))
+		//	{
+		//		newList.Add(c);
+		//		newSet.Add(c);
+		//	}
+		//	if (this.otherParents != null)
+		//	{
+		//		HashSet<Commit> oldSet = new HashSet<Commit>();
+		//		bool allGood = true;
+		//		foreach (var p in this.otherParents)
+		//		{
+		//			if (!newSet.Contains(p))
+		//				allGood = false;
+		//			oldSet.Add(p);
+		//		}
+		//		if (allGood)
+		//			foreach (var p in newList)
+		//			{
+		//				if (!oldSet.Contains(p))
+		//				{
+		//					allGood = false;
+		//					break;
+		//				}
+		//			}
+		//		if (allGood)
+		//			return this;
 
-				bool brk = true;
-			}
-			else
-				if (newList.Count == 0 || Parent == null)
-				{
-					if (Parent == null && Generation > 0)
-						errors ++;
-					return this;
-				}
+		//		bool brk = true;
+		//	}
+		//	else
+		//		if (newList.Count == 0 || Parent == null)
+		//		{
+		//			if (Parent == null && Generation > 0)
+		//				errors ++;
+		//			return this;
+		//		}
 
 
 
-			Commit parent = ((Commit)Parent).Update(newList, ref depth, ref errors);
+		//	Commit parent = ((Commit)Parent).Update(newList, ref depth, ref errors);
 
-			State newState = parent.state.Evolve(StatesOf(newList));
-			bool adapt = newState == this.state;
+		//	State newState = parent.state.Evolve(StatesOf(newList));
+		//	bool adapt = newState == this.state;
 
-			if (StrictAdaption && parent != Parent)
-				adapt = false;
+		//	if (StrictAdaption && parent != Parent)
+		//		adapt = false;
 
-			depth = Math.Min(depth, Generation);
-			Commit rs;
-			if (adapt)
-			{
-				rs = this;
-				rs.Parent = parent;
-			}
-			else
-			{
-				rs = new Commit(Generation, Revision + 1, parent,parent.ID);
-				rs.state = newState;
-			}
+		//	depth = Math.Min(depth, Generation);
+		//	Commit rs;
+		//	if (adapt)
+		//	{
+		//		rs = this;
+		//		rs.Parent = parent;
+		//	}
+		//	else
+		//	{
+		//		rs = new Commit(Generation, Revision + 1, parent,parent.ID);
+		//		rs.state = newState;
+		//	}
 
-			rs.otherParents = newList.ToArray();
-			return rs;
-		}
+		//	rs.otherParents = newList.ToArray();
+		//	return rs;
+		//}
 
 		internal void Truncate(int maxDepth)
 		{
@@ -181,12 +181,12 @@ namespace TechniteSimulation
 		//	return knownHead;
 		//}
 
-		internal Commit Evolve(IEnumerable<Commit> n, ref int depth, ref int errors)
-		{
-			Commit self = Update(n, ref depth, ref errors);
-			Commit rs = new Commit(self.Generation+1,0,self,self.ID);
-			return rs.Update(n, ref depth, ref errors);
-		}
+		//internal Commit Evolve(IEnumerable<Commit> n, ref int depth, ref int errors)
+		//{
+		//	Commit self = Update(n, ref depth, ref errors);
+		//	Commit rs = new Commit(self.Generation+1,0,self,self.ID);
+		//	return rs.Update(n, ref depth, ref errors);
+		//}
 
 	}
 }

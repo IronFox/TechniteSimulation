@@ -55,7 +55,7 @@ namespace TechniteSimulation
 		public Sector(ID id)
 		{
 			MyID = id;
-			sequence = new Sequence(new State[] { new State(id, 0) },0);
+			sequence = new Sequence(new State[] { new State(id, 0) },0,1);
 		}
 		//public NeighborAxis[] Neighbors = new NeighborAxis[2];
 
@@ -84,19 +84,6 @@ namespace TechniteSimulation
 			);
 		}
 
-		public bool IsConsistent
-		{
-			get
-			{
-				bool rs = true;
-				VisitNeighbors(delegate (Neighbor n)
-				{
-					if (n.knownHead != n.Sector.commit)
-						rs = false;
-				});
-				return rs;
-			}
-		}
 
 		internal struct NeighborAxis
 		{
@@ -110,44 +97,37 @@ namespace TechniteSimulation
 			}
 		}
 
-		internal void CountCommits(HashSet<Commit> commits, ref int cnt)
-		{
-			foreach (var n in NeighborCommits())
-				n.CountCommits(commits, ref cnt);
-			commit.CountCommits(commits, ref cnt);
-		}
-
 		public void VisitNeighbors(Action<Neighbor> act)
 		{
 			foreach (var n in neighbors.Values)
 				act(n);
 		}
-		public IEnumerable<Commit> NeighborCommits()
+		public IEnumerable<Sequence> NeighborSequences()
 		{
 			foreach (var n in neighbors.Values)
-				if (n.knownHead != null)
-					yield return n.knownHead;
+				yield return n.knownSequence;
 		}
 
 		public int depth = 0;
 		public int errors = 0;
 		public void Update()
 		{
-			depth = commit.Generation;
-			commit = commit.Update(NeighborCommits(), ref depth, ref errors);
-			depth = commit.Generation - depth;
+			depth = sequence.MaxGeneration;
+			sequence = sequence.Update(NeighborSequences(), ref depth, ref errors,sequence.States.Length);
+			depth = sequence.MaxGeneration - depth;
 		}
 
 		public void Evolve()
 		{
-			depth = commit.Generation + 1;
-			commit = commit.Evolve(NeighborCommits(),ref depth, ref errors);
-			depth = commit.Generation - depth;
+			depth = sequence.MaxGeneration+1;
+			sequence = sequence.Evolve(NeighborSequences(),ref depth, ref errors);
+			depth = sequence.MaxGeneration - depth;
 		}
 
 		public void Truncate(int maxDepth)
 		{
-			commit.Truncate(maxDepth);
+			if (sequence.States.Length > maxDepth)
+				sequence = sequence.Truncate(maxDepth);
 		}
 
 	}
