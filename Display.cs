@@ -34,9 +34,9 @@ namespace TechniteSimulation
 			//	}
 			int age = sector.sequence.States.Length - sector.sequence.ConsistentRange;
 
-			
 
-			return Color.FromArgb(Math.Min(255, bad), Math.Min(255, age*10), colorErrors ? Math.Min(255, sector.errors) : 0);
+
+			return Color.FromArgb(Math.Min(255, bad), Math.Min(255, age * 10), colorErrors ? Math.Min(255, sector.errors) : 0);
 		}
 		public static int refreshCommitCount = 10;
 		private void timer1_Tick(object sender, EventArgs e)
@@ -46,7 +46,7 @@ namespace TechniteSimulation
 			int step = canvas.Width / Program.tables.Length;
 			foreach (var t in Program.tables)
 			{
-				t.Evolve(doEvolve.Checked, frame*9082);
+				t.Evolve(doEvolve.Checked, frame * 9082);
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
@@ -66,7 +66,7 @@ namespace TechniteSimulation
 				for (int y = 0; y < t.sectors.GetLength(0); y++)
 				{
 					Sector s = t.sectors[x, y];
-					graphics.FillRectangle(new SolidBrush(GetColor(s,ce)), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
+					graphics.FillRectangle(new SolidBrush(GetColor(s, ce)), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
 				}
 
 		}
@@ -76,5 +76,13 @@ namespace TechniteSimulation
 			graphics = canvas.CreateGraphics();
 		}
 
+		private void flushErrors_Click(object sender, EventArgs e)
+		{
+			foreach (var t in Program.tables)
+			{
+				foreach (var s in t.sectors)
+					s.errors = 0;
+			}
+		}
 	}
 }

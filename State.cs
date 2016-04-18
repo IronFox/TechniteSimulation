@@ -41,11 +41,10 @@ namespace TechniteSimulation
 			int outValue = value;
 			bool evolve = rng.NextDouble() < 0.6;
 			foreach (var st in enumerable)
-				if (rng.NextDouble() < 0.4 / Math.Sqrt(SectorID.QuadraticDistanceTo(st.SectorID)))
-				{
-					outValue += st.value;
-					evolve = true;
-				}
+			{
+				outValue += st.value;
+				evolve = true;
+			}
 			if (evolve)
 				outValue += rng.Next();
 
@@ -54,7 +53,12 @@ namespace TechniteSimulation
 					: new State(SectorID, 0, outValue);
 		}
 
-
+		internal bool RelevantToEvolution(State other, ref Random rng)
+		{
+			if (rng == null)
+				rng = new Random(value);
+			return rng.NextDouble() < 0.4 / Math.Sqrt(SectorID.QuadraticDistanceTo(other.SectorID));
+		}
 
 		public static bool operator ==(State a, State b)
 		{

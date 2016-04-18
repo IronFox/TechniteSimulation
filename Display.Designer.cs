@@ -35,6 +35,7 @@
 			this.commits = new System.Windows.Forms.Label();
 			this.offCommits = new System.Windows.Forms.Label();
 			this.colorErrors = new System.Windows.Forms.CheckBox();
+			this.flushErrors = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -95,11 +96,22 @@
 			this.colorErrors.Text = "Color Errors";
 			this.colorErrors.UseVisualStyleBackColor = true;
 			// 
+			// flushErrors
+			// 
+			this.flushErrors.Location = new System.Drawing.Point(86, 2);
+			this.flushErrors.Name = "flushErrors";
+			this.flushErrors.Size = new System.Drawing.Size(166, 24);
+			this.flushErrors.TabIndex = 6;
+			this.flushErrors.Text = "Flush Errors";
+			this.flushErrors.UseVisualStyleBackColor = true;
+			this.flushErrors.Click += new System.EventHandler(this.flushErrors_Click);
+			// 
 			// Display
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(809, 261);
+			this.Controls.Add(this.flushErrors);
 			this.Controls.Add(this.colorErrors);
 			this.Controls.Add(this.offCommits);
 			this.Controls.Add(this.commits);
@@ -121,5 +133,6 @@
 		private System.Windows.Forms.Label commits;
 		private System.Windows.Forms.Label offCommits;
 		private System.Windows.Forms.CheckBox colorErrors;
+		private System.Windows.Forms.Button flushErrors;
 	}
 }

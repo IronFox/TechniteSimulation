@@ -24,6 +24,7 @@ namespace TechniteSimulation
 			List<State> newStates = new List<State>();
 			int consistentTo = 0;
 			bool consistent = true;
+			List<State> newList = new List<State>();
 			for (int stateI = 0; stateI < numGenerations; stateI++)
 			{
 				int g = stateI + GenerationOffset;
@@ -34,27 +35,31 @@ namespace TechniteSimulation
 				}
 				else
 				{
-					List<State> newList = new List<State>();
-					HashSet<State> newSet = new HashSet<State>();
+					State b = newStates[newStates.Count() - 1];
+					Random rng = null;
 					foreach (var c in AtGeneration(otherParents, g - 1))
 					{
 						if (c.Item1.HasValue)
 						{
-							newList.Add(c.Item1.Value);
-							newSet.Add(c.Item1.Value);
+							if (b.RelevantToEvolution(c.Item1.Value,ref rng))
+							{
+								newList.Add(c.Item1.Value);
+
+								if (!c.Item2)
+									consistent = false;
+							}
 						}
 						else
 						{
 							errors++;
 							consistent = false;
 						}
-						if (!c.Item2)
-							consistent = false;
+						
 					}
 
-					State b = newStates[newStates.Count()-1];
 					var reference = stateI < States.Length ? new State?(States[stateI]) : null;
 					newStates.Add(b.Evolve(newList, reference));
+					newList.Clear();
 					if (g < depth && reference.HasValue && newStates[newStates.Count() - 1] != reference.Value)
 						depth = g;
 					if (consistent)
