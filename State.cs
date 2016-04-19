@@ -53,11 +53,32 @@ namespace TechniteSimulation
 					: new State(SectorID, 0, outValue);
 		}
 
-		internal bool RelevantToEvolution(State other, ref Random rng)
+		
+
+		int xorshf96(int seed)
+		{          //period 2^96-1
+			int x = 123456789 * seed, y = 362436069 + seed, z = 521288629 ^seed;
+			int t;
+			x ^= x << 16;
+			x ^= x >> 5;
+			x ^= x << 1;
+
+			t = x;
+			x = y;
+			y = z;
+			z = t ^ x ^ y;
+
+			return z;
+		}
+
+		internal bool RelevantToEvolution(Sector.ID other, int generation)
 		{
-			if (rng == null)
-				rng = new Random(value);
-			return rng.NextDouble() < 0.4 / Math.Sqrt(SectorID.QuadraticDistanceTo(other.SectorID));
+			//return true;
+			int val = other.GetHashCode() * 17 + SectorID.GetHashCode();
+			val = val * 17 + generation;
+//			Random rng = new Random(val);
+			float rnd = (float)(xorshf96(val)%0xFF) / 255.0f;
+			return rnd < 0.1 / (SectorID.QuadraticDistanceTo(other));
 		}
 
 		public static bool operator ==(State a, State b)

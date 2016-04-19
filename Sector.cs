@@ -102,10 +102,10 @@ namespace TechniteSimulation
 			foreach (var n in neighbors.Values)
 				act(n);
 		}
-		public IEnumerable<Sequence> NeighborSequences()
+		public IEnumerable<Tuple<ID, Sequence>> NeighborSequences()
 		{
 			foreach (var n in neighbors.Values)
-				yield return n.knownSequence;
+				yield return new Tuple<ID, Sequence>(n.Sector.MyID,  n.knownSequence);
 		}
 
 		public int depth = 0;

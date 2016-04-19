@@ -36,6 +36,7 @@
 			this.offCommits = new System.Windows.Forms.Label();
 			this.colorErrors = new System.Windows.Forms.CheckBox();
 			this.flushErrors = new System.Windows.Forms.Button();
+			this.simulate = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -89,6 +90,8 @@
 			// colorErrors
 			// 
 			this.colorErrors.AutoSize = true;
+			this.colorErrors.Checked = true;
+			this.colorErrors.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.colorErrors.Location = new System.Drawing.Point(0, 25);
 			this.colorErrors.Name = "colorErrors";
 			this.colorErrors.Size = new System.Drawing.Size(80, 17);
@@ -98,7 +101,7 @@
 			// 
 			// flushErrors
 			// 
-			this.flushErrors.Location = new System.Drawing.Point(86, 2);
+			this.flushErrors.Location = new System.Drawing.Point(172, 2);
 			this.flushErrors.Name = "flushErrors";
 			this.flushErrors.Size = new System.Drawing.Size(166, 24);
 			this.flushErrors.TabIndex = 6;
@@ -106,11 +109,25 @@
 			this.flushErrors.UseVisualStyleBackColor = true;
 			this.flushErrors.Click += new System.EventHandler(this.flushErrors_Click);
 			// 
+			// simulate
+			// 
+			this.simulate.AutoSize = true;
+			this.simulate.Checked = true;
+			this.simulate.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.simulate.Location = new System.Drawing.Point(86, 25);
+			this.simulate.Name = "simulate";
+			this.simulate.Size = new System.Drawing.Size(66, 17);
+			this.simulate.TabIndex = 7;
+			this.simulate.Text = "Simulate";
+			this.simulate.UseVisualStyleBackColor = true;
+			this.simulate.CheckedChanged += new System.EventHandler(this.simulate_CheckedChanged);
+			// 
 			// Display
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(809, 261);
+			this.Controls.Add(this.simulate);
 			this.Controls.Add(this.flushErrors);
 			this.Controls.Add(this.colorErrors);
 			this.Controls.Add(this.offCommits);
@@ -134,5 +151,6 @@
 		private System.Windows.Forms.Label offCommits;
 		private System.Windows.Forms.CheckBox colorErrors;
 		private System.Windows.Forms.Button flushErrors;
+		private System.Windows.Forms.CheckBox simulate;
 	}
 }

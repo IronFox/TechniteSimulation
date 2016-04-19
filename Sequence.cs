@@ -19,7 +19,7 @@ namespace TechniteSimulation
 			ConsistentRange = numConsistent;
 		}
 
-		internal Sequence Update(IEnumerable<Sequence> otherParents, ref int depth, ref int errors, int numGenerations)
+		internal Sequence Update(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, ref int depth, ref int errors, int numGenerations)
 		{
 			List<State> newStates = new List<State>();
 			int consistentTo = 0;
@@ -36,23 +36,25 @@ namespace TechniteSimulation
 				else
 				{
 					State b = newStates[newStates.Count() - 1];
-					Random rng = null;
 					foreach (var c in AtGeneration(otherParents, g - 1))
 					{
-						if (c.Item1.HasValue)
+						if (c.Item2.HasValue)
 						{
-							if (b.RelevantToEvolution(c.Item1.Value,ref rng))
+							if (b.RelevantToEvolution(c.Item1,g))
 							{
-								newList.Add(c.Item1.Value);
+								newList.Add(c.Item2.Value);
 
-								if (!c.Item2)
+								if (!c.Item3)
 									consistent = false;
 							}
 						}
 						else
 						{
-							errors++;
-							consistent = false;
+							if (b.RelevantToEvolution(c.Item1, g))
+							{
+								errors++;
+								consistent = false;
+							}
 						}
 						
 					}
@@ -69,19 +71,19 @@ namespace TechniteSimulation
 			return new Sequence(newStates, GenerationOffset, consistentTo);
 		}
 
-		private static IEnumerable<Tuple<State?, bool>> AtGeneration(IEnumerable<Sequence> otherParents, int generation)
+		private static IEnumerable<Tuple<Sector.ID, State?, bool>> AtGeneration(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, int generation)
 		{
 			foreach (var c in otherParents)
 			{
-				if (c == null)
+				if (c.Item2 == null)
 				{
-					yield return new Tuple<State?, bool>(null, false);
+					yield return new Tuple<Sector.ID, State?, bool>(c.Item1, null, false);
 				}
 				else
 				{
 					bool consistent = false;
-					State? p = c.FindGeneration(generation, out consistent);
-					yield return new Tuple<State?, bool>(p, consistent);
+					State? p = c.Item2.FindGeneration(generation, out consistent);
+					yield return new Tuple<Sector.ID, State?, bool>(c.Item1, p, consistent);
 				}
 			}
 		}
@@ -98,7 +100,7 @@ namespace TechniteSimulation
 			return States[at];
 		}
 
-		internal Sequence Evolve(IEnumerable<Sequence> n, ref int depth, ref int errors)
+		internal Sequence Evolve(IEnumerable<Tuple<Sector.ID, Sequence>> n, ref int depth, ref int errors)
 		{
 			return Update(n, ref depth, ref errors,States.Length+1);
 		}

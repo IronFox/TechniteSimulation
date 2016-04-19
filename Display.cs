@@ -22,9 +22,11 @@ namespace TechniteSimulation
 
 		static int frame = 0;
 
+		const int MaxHistoryLength = 16;
+
 		private Color GetColor(Sector sector, bool colorErrors)
 		{
-			int bad = 30 * sector.depth;
+			int bad = 255 * sector.depth / MaxHistoryLength;
 
 			//int oldest = sector.sequence.Generation - 1;
 			//if (sector.commit.otherParents != null)
@@ -32,11 +34,11 @@ namespace TechniteSimulation
 			//	{
 			//		oldest = Math.Min(oldest, n.Generation);
 			//	}
-			int age = sector.sequence.States.Length - sector.sequence.ConsistentRange;
+			int age = (sector.sequence.States.Length - sector.sequence.ConsistentRange) * 255 / MaxHistoryLength;
 
 
 
-			return Color.FromArgb(Math.Min(255, bad), Math.Min(255, age * 10), colorErrors ? Math.Min(255, sector.errors) : 0);
+			return Color.FromArgb(Math.Min(255, bad), Math.Min(255, age), colorErrors ? Math.Min(255, sector.errors*10) : 0);
 		}
 		public static int refreshCommitCount = 10;
 		private void timer1_Tick(object sender, EventArgs e)
@@ -46,7 +48,7 @@ namespace TechniteSimulation
 			int step = canvas.Width / Program.tables.Length;
 			foreach (var t in Program.tables)
 			{
-				t.Evolve(doEvolve.Checked, frame * 9082);
+				t.Evolve(doEvolve.Checked, frame * 9082, MaxHistoryLength);
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
@@ -83,6 +85,11 @@ namespace TechniteSimulation
 				foreach (var s in t.sectors)
 					s.errors = 0;
 			}
+		}
+
+		private void simulate_CheckedChanged(object sender, EventArgs e)
+		{
+			timer1.Enabled = simulate.Checked;
 		}
 	}
 }
