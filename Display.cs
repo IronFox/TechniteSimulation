@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -60,16 +62,44 @@ namespace TechniteSimulation
 
 		private void PaintTable(SectorTable t, Rectangle rectangle)
 		{
-			bool ce = colorErrors.Checked;
-			float w = (float)rectangle.Width / t.sectors.GetLength(0);
-			float h = (float)rectangle.Height / t.sectors.GetLength(1);
+			Bitmap image = new Bitmap(t.sectors.GetLength(0), t.sectors.GetLength(1), PixelFormat.Format24bppRgb);
 
+
+			var BoundsRect = new Rectangle(0, 0, image.Width, image.Height);
+			BitmapData bmpData = image.LockBits(BoundsRect,
+													ImageLockMode.WriteOnly,
+													image.PixelFormat);
+
+			IntPtr ptr = bmpData.Scan0;
+
+			int bytes = bmpData.Stride * image.Height;
+			var rgbValues = new byte[bytes];
+
+			bool ce = colorErrors.Checked;
 			for (int x = 0; x < t.sectors.GetLength(0); x++)
 				for (int y = 0; y < t.sectors.GetLength(0); y++)
 				{
 					Sector s = t.sectors[x, y];
-					graphics.FillRectangle(new SolidBrush(GetColor(s, ce)), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
+					Color c = GetColor(s, ce);
+					rgbValues[x * 3 + y * bmpData.Stride+2] = c.R;
+					rgbValues[x * 3 + y * bmpData.Stride+1] = c.G;
+					rgbValues[x * 3 + y * bmpData.Stride] = c.B;
 				}
+
+			Marshal.Copy(rgbValues, 0, ptr, bytes);
+			image.UnlockBits(bmpData);
+
+
+			float w = (float)rectangle.Width / t.sectors.GetLength(0);
+			float h = (float)rectangle.Height / t.sectors.GetLength(1);
+
+			graphics.DrawImage(image, rectangle);
+
+			//for (int x = 0; x < t.sectors.GetLength(0); x++)
+			//	for (int y = 0; y < t.sectors.GetLength(0); y++)
+			//	{
+			//		graphics.FillRectangle(new SolidBrush(), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
+			//	}
 
 		}
 
