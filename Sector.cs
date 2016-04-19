@@ -74,7 +74,8 @@ namespace TechniteSimulation
 				knownSequence = null;
 			}
 		}
-		public void Fetch(Random rng)
+		static Random rng = new Random();
+		public void Fetch()
 		{
 			VisitNeighbors(delegate(Neighbor n)
 			{
@@ -112,6 +113,8 @@ namespace TechniteSimulation
 		public int errors = 0;
 		public void Update()
 		{
+			if (sequence.ConsistentRange == sequence.States.Length)
+				return;
 			depth = sequence.MaxGeneration;
 			sequence = sequence.Update(NeighborSequences(), ref depth, ref errors,sequence.States.Length);
 			depth = sequence.MaxGeneration - depth;

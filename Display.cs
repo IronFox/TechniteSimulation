@@ -22,7 +22,7 @@ namespace TechniteSimulation
 
 		static int frame = 0;
 
-		const int MaxHistoryLength = 16;
+		const int MaxHistoryLength = 32;
 
 		private Color GetColor(Sector sector, bool colorErrors)
 		{
@@ -48,12 +48,12 @@ namespace TechniteSimulation
 			int step = canvas.Width / Program.tables.Length;
 			foreach (var t in Program.tables)
 			{
-				t.Evolve(doEvolve.Checked, frame * 9082, MaxHistoryLength);
+				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength);
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
 
-
+			commits.Text = Program.tables.First().sectors[0,0].sequence.MaxGeneration.ToString();
 			//		graphics.DrawEllipse(new Pen(Color.FromArgb(frame%256,0,0),10), rectangle);
 			//graphics.DrawRectangle(System.Drawing.Pens.Red, rectangle);
 		}

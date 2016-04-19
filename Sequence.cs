@@ -44,7 +44,7 @@ namespace TechniteSimulation
 							{
 								newList.Add(c.Item2.Value);
 
-								if (!c.Item3)
+								if (c.Item3 == StateType.Inconsistent)
 									consistent = false;
 							}
 						}
@@ -52,7 +52,8 @@ namespace TechniteSimulation
 						{
 							if (b.RelevantToEvolution(c.Item1, g))
 							{
-								errors++;
+								if (c.Item3 == StateType.Truncated)
+									errors++;
 								consistent = false;
 							}
 						}
@@ -63,7 +64,11 @@ namespace TechniteSimulation
 					newStates.Add(b.Evolve(newList, reference));
 					newList.Clear();
 					if (g < depth && reference.HasValue && newStates[newStates.Count() - 1] != reference.Value)
+					{
+						if (stateI == 1)
+							errors++;
 						depth = g;
+					}
 					if (consistent)
 						consistentTo++;
 				}
@@ -71,32 +76,45 @@ namespace TechniteSimulation
 			return new Sequence(newStates, GenerationOffset, consistentTo);
 		}
 
-		private static IEnumerable<Tuple<Sector.ID, State?, bool>> AtGeneration(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, int generation)
+		public enum StateType
+		{
+			Okay,
+			Inconsistent,
+			Unavailable,
+			Truncated
+		}
+		private static IEnumerable<Tuple<Sector.ID, State?, StateType>> AtGeneration(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, int generation)
 		{
 			foreach (var c in otherParents)
 			{
 				if (c.Item2 == null)
 				{
-					yield return new Tuple<Sector.ID, State?, bool>(c.Item1, null, false);
+					yield return new Tuple<Sector.ID, State?, StateType>(c.Item1, null, StateType.Unavailable);
 				}
 				else
 				{
-					bool consistent = false;
+					StateType consistent;
 					State? p = c.Item2.FindGeneration(generation, out consistent);
-					yield return new Tuple<Sector.ID, State?, bool>(c.Item1, p, consistent);
+					yield return new Tuple<Sector.ID, State?, StateType>(c.Item1, p, consistent);
 				}
 			}
 		}
 
-		private State? FindGeneration(int generation, out bool consistent)
+		private State? FindGeneration(int generation, out StateType consistent)
 		{
-			consistent = false;
+			consistent = StateType.Inconsistent;
 			if (generation < GenerationOffset)
+			{
+				consistent = StateType.Truncated;
 				return null;
+			}
 			int at = generation - GenerationOffset;
 			if (at >= States.Length)
-				return null;
-			consistent = at < ConsistentRange;
+			{
+				consistent = StateType.Inconsistent;
+				return States[States.Length - 1];
+			}
+			consistent = at < ConsistentRange ? StateType.Okay : StateType.Inconsistent;
 			return States[at];
 		}
 
