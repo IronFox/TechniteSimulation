@@ -15,9 +15,9 @@ namespace TechniteSimulation
 		{
 			int size = 50;
 			tables = new SectorTable[] {
-				new SectorTable(size, size,1),
+				//new SectorTable(size, size,1),
 				new SectorTable(size, size),
-				new SectorTable(size, size,2),
+				//new SectorTable(size, size,2),
 
 			};
 			
