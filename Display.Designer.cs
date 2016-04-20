@@ -51,7 +51,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.canvas.Location = new System.Drawing.Point(0, 45);
 			this.canvas.Name = "canvas";
-			this.canvas.Size = new System.Drawing.Size(808, 214);
+			this.canvas.Size = new System.Drawing.Size(444, 443);
 			this.canvas.TabIndex = 1;
 			this.canvas.Click += new System.EventHandler(this.canvas_Click);
 			this.canvas.Resize += new System.EventHandler(this.Display_ResizeEnd);
@@ -72,7 +72,7 @@
 			// 
 			this.commits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.commits.AutoSize = true;
-			this.commits.Location = new System.Drawing.Point(702, 13);
+			this.commits.Location = new System.Drawing.Point(338, 13);
 			this.commits.Name = "commits";
 			this.commits.Size = new System.Drawing.Size(106, 13);
 			this.commits.TabIndex = 3;
@@ -82,7 +82,7 @@
 			// 
 			this.offCommits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.offCommits.AutoSize = true;
-			this.offCommits.Location = new System.Drawing.Point(754, 29);
+			this.offCommits.Location = new System.Drawing.Point(390, 29);
 			this.offCommits.Name = "offCommits";
 			this.offCommits.Size = new System.Drawing.Size(54, 13);
 			this.offCommits.TabIndex = 4;
@@ -127,7 +127,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(809, 261);
+			this.ClientSize = new System.Drawing.Size(445, 490);
 			this.Controls.Add(this.simulate);
 			this.Controls.Add(this.flushErrors);
 			this.Controls.Add(this.colorErrors);
