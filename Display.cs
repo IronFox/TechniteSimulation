@@ -49,6 +49,11 @@ namespace TechniteSimulation
 			int at = 0;
 			int step = canvas.Width / Program.tables.Length;
 
+			if (doEvolve.Checked)
+				foreach (var t in Program.tables)
+				{
+					t.Evolve(false, frame, MaxHistoryLength, true);
+				}
 			foreach (var t in Program.tables)
 			{
 				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength,true);
