@@ -49,13 +49,44 @@ namespace TechniteSimulation
 			{
 				return Sqr(X - other.X) + Sqr(Y - other.Y);
 			}
+
+
+
+			static int xorshf96(int seed)
+			{          //period 2^96-1
+				int x = 123456789 * seed, y = 362436069 + seed, z = 521288629 ^ seed;
+				int t;
+				x ^= x << 16;
+				x ^= x >> 5;
+				x ^= x << 1;
+
+				t = x;
+				x = y;
+				y = z;
+				z = t ^ x ^ y;
+
+				return z;
+			}
+
+			internal bool RelevantToEvolution(ID other, int generation)
+			{
+
+				//			val = val * 17 + generation;
+				////			Random rng = new Random(val);
+				//			float rnd = (float)(xorshf96(val)%0xFF) / 255.0f;
+				//return true;
+				//			int val = other.GetHashCode() * 17 + SectorID.GetHashCode();
+				double rnd = PerlinNoise.Global.Noise(Math.PI *( X * 100 + (other.X - X) * 10), Math.E *(Y * 100 + (other.Y - Y) * 10), (double)generation / 20.0);
+					//10.0 + 0.0 * (double)generation / 20.0f/* + val*/);
+				return Math.Abs(rnd) < 0.05 / (QuadraticDistanceTo(other));
+			}
 		}
 		public readonly ID MyID;
 
 		public Sector(ID id)
 		{
 			MyID = id;
-			sequence = new Sequence(new State[] { new State(id, 0) },0,1);
+			sequence = new Sequence(new State[] { new State(id, 0) },0,1,id,id);
 		}
 		//public NeighborAxis[] Neighbors = new NeighborAxis[2];
 
