@@ -50,7 +50,9 @@ namespace TechniteSimulation
 			*/
 
 			Application.EnableVisualStyles();
-			Application.Run(new Display());
+			Display wnd = new Display();
+			wnd.Width = wnd.Height * tables.Length;
+			Application.Run(wnd);
 		}
 
 
