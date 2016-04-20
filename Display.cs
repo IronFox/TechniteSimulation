@@ -105,12 +105,31 @@ namespace TechniteSimulation
 
 			graphics.DrawImage(image, rectangle);
 
+			if (drawGraph.Checked)
+			{
+				Pen p = new Pen(Color.Red);
+				foreach (var s in t.sectors)
+				{
+					if (s.sequence.PrimaryInconsistencySource != s.MyID)
+					{
+						DrawLine(p, rectangle.Location, w, h, s.MyID, s.sequence.PrimaryInconsistencySource);
+
+					}
+				};
+			}
+
 			//for (int x = 0; x < t.sectors.GetLength(0); x++)
 			//	for (int y = 0; y < t.sectors.GetLength(0); y++)
 			//	{
 			//		graphics.FillRectangle(new SolidBrush(), new RectangleF(x * w + rectangle.X, y * h + rectangle.Y, w, h));
 			//	}
 
+		}
+
+		private void DrawLine(Pen p, Point offset, float w, float h, Sector.ID to, Sector.ID from)
+		{
+			graphics.DrawLine(p, from.X * w + offset.X, from.Y * h + offset.Y,
+				to.X * w + offset.X, to.Y * h + offset.Y);
 		}
 
 		private void Display_ResizeEnd(object sender, EventArgs e)
@@ -159,6 +178,12 @@ namespace TechniteSimulation
 				}
 			}
 
+		}
+
+		private void drawGraph_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!timer1.Enabled)
+				RepaintTables();
 		}
 	}
 }

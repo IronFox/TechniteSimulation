@@ -37,6 +37,7 @@
 			this.colorErrors = new System.Windows.Forms.CheckBox();
 			this.flushErrors = new System.Windows.Forms.Button();
 			this.simulate = new System.Windows.Forms.CheckBox();
+			this.drawGraph = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -123,11 +124,23 @@
 			this.simulate.UseVisualStyleBackColor = true;
 			this.simulate.CheckedChanged += new System.EventHandler(this.simulate_CheckedChanged);
 			// 
+			// drawGraph
+			// 
+			this.drawGraph.AutoSize = true;
+			this.drawGraph.Location = new System.Drawing.Point(86, 2);
+			this.drawGraph.Name = "drawGraph";
+			this.drawGraph.Size = new System.Drawing.Size(55, 17);
+			this.drawGraph.TabIndex = 8;
+			this.drawGraph.Text = "Graph";
+			this.drawGraph.UseVisualStyleBackColor = true;
+			this.drawGraph.CheckedChanged += new System.EventHandler(this.drawGraph_CheckedChanged);
+			// 
 			// Display
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(445, 490);
+			this.Controls.Add(this.drawGraph);
 			this.Controls.Add(this.simulate);
 			this.Controls.Add(this.flushErrors);
 			this.Controls.Add(this.colorErrors);
@@ -153,5 +166,6 @@
 		private System.Windows.Forms.CheckBox colorErrors;
 		private System.Windows.Forms.Button flushErrors;
 		private System.Windows.Forms.CheckBox simulate;
+		private System.Windows.Forms.CheckBox drawGraph;
 	}
 }
