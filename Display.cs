@@ -49,16 +49,14 @@ namespace TechniteSimulation
 			int at = 0;
 			int step = canvas.Width / Program.tables.Length;
 
-			//Program.tables[0].Evolve(doEvolve.Checked, frame, MaxHistoryLength, true);
-			Program.tables[1].Evolve(doEvolve.Checked, frame, MaxHistoryLength, true);
 			foreach (var t in Program.tables)
 			{
-				//t.Evolve(doEvolve.Checked, frame, MaxHistoryLength);
+				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength,true);
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
 
-			commits.Text = Program.tables[1].sectors[0,0].sequence.MaxGeneration.ToString();
+			commits.Text = Program.tables[0].sectors[0,0].sequence.MaxGeneration.ToString();
 			//		graphics.DrawEllipse(new Pen(Color.FromArgb(frame%256,0,0),10), rectangle);
 			//graphics.DrawRectangle(System.Drawing.Pens.Red, rectangle);
 		}
