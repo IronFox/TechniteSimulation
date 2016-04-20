@@ -13,7 +13,7 @@ namespace TechniteSimulation
 		[STAThread]
 		static void Main(string[] args)
 		{
-			int size = 50;
+			int size = 100;
 			tables = new SectorTable[] {
 				//new SectorTable(size, size,1),
 				new SectorTable(size, size),
