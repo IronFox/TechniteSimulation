@@ -46,8 +46,6 @@ namespace TechniteSimulation
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			frame++;
-			int at = 0;
-			int step = canvas.Width / Program.tables.Length;
 
 			if (doEvolve.Checked)
 				foreach (var t in Program.tables)
@@ -55,15 +53,21 @@ namespace TechniteSimulation
 					t.Evolve(false, frame, MaxHistoryLength, true);
 				}
 			foreach (var t in Program.tables)
-			{
 				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength,true);
+
+			RepaintTables();
+			commits.Text = Program.tables[0].sectors[0,0].sequence.MaxGeneration.ToString();
+		}
+
+		private void RepaintTables()
+		{
+			int at = 0;
+			int step = canvas.Width / Program.tables.Length;
+			foreach (var t in Program.tables)
+			{
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
-
-			commits.Text = Program.tables[0].sectors[0,0].sequence.MaxGeneration.ToString();
-			//		graphics.DrawEllipse(new Pen(Color.FromArgb(frame%256,0,0),10), rectangle);
-			//graphics.DrawRectangle(System.Drawing.Pens.Red, rectangle);
 		}
 
 		private void PaintTable(SectorTable t, Rectangle rectangle)
