@@ -53,6 +53,7 @@
 			this.canvas.Name = "canvas";
 			this.canvas.Size = new System.Drawing.Size(808, 214);
 			this.canvas.TabIndex = 1;
+			this.canvas.Click += new System.EventHandler(this.canvas_Click);
 			this.canvas.Resize += new System.EventHandler(this.Display_ResizeEnd);
 			// 
 			// doEvolve

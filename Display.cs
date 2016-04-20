@@ -48,14 +48,17 @@ namespace TechniteSimulation
 			frame++;
 			int at = 0;
 			int step = canvas.Width / Program.tables.Length;
+
+			//Program.tables[0].Evolve(doEvolve.Checked, frame, MaxHistoryLength, true);
+			Program.tables[1].Evolve(doEvolve.Checked, frame, MaxHistoryLength, true);
 			foreach (var t in Program.tables)
 			{
-				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength);
+				//t.Evolve(doEvolve.Checked, frame, MaxHistoryLength);
 				PaintTable(t, new Rectangle(step * at, 0, step, canvas.Height));
 				at++;
 			}
 
-			commits.Text = Program.tables.First().sectors[0,0].sequence.MaxGeneration.ToString();
+			commits.Text = Program.tables[1].sectors[0,0].sequence.MaxGeneration.ToString();
 			//		graphics.DrawEllipse(new Pen(Color.FromArgb(frame%256,0,0),10), rectangle);
 			//graphics.DrawRectangle(System.Drawing.Pens.Red, rectangle);
 		}
@@ -120,6 +123,35 @@ namespace TechniteSimulation
 		private void simulate_CheckedChanged(object sender, EventArgs e)
 		{
 			timer1.Enabled = simulate.Checked;
+		}
+
+		private void canvas_Click(object sender, EventArgs e)
+		{
+			int x = MousePosition.X;// - canvas.Left - this.Left;
+			int y = MousePosition.Y;// - canvas.Top - this.Top;
+
+
+
+			int at = 0;
+			int step = canvas.Width / Program.tables.Length;
+			foreach (var t in Program.tables)
+			{
+				//t.Evolve(doEvolve.Checked, frame, MaxHistoryLength);
+				Rectangle r = canvas.RectangleToScreen(
+					new Rectangle(step * at, 0, step, canvas.Height) );
+				at++;
+
+				if (r.Contains(x,y))
+				{
+					int x2 = (x - r.Left) * t.sectors.GetLength(0) / r.Width;
+					int y2 = (y - r.Top)* t.sectors.GetLength(1) / r.Height;
+
+					t.sectors[x2, y2].ToggleIsolation();
+
+					return;
+				}
+			}
+
 		}
 	}
 }

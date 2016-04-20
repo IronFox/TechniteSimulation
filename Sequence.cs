@@ -19,7 +19,7 @@ namespace TechniteSimulation
 			ConsistentRange = numConsistent;
 		}
 
-		internal Sequence Update(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, ref int depth, ref int errors, int numGenerations)
+		internal Sequence Update(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, ref int depth, ref int errors, int numGenerations, bool optimize)
 		{
 			List<State> newStates = new List<State>();
 			int consistentTo = 0;
@@ -28,9 +28,9 @@ namespace TechniteSimulation
 			for (int stateI = 0; stateI < numGenerations; stateI++)
 			{
 				int g = stateI + GenerationOffset;
-				if (stateI == 0)
+				if (stateI == 0 || (optimize && stateI < ConsistentRange))
 				{
-					newStates.Add(States[0]);
+					newStates.Add(States[stateI]);
 					consistentTo++;
 				}
 				else
@@ -118,9 +118,9 @@ namespace TechniteSimulation
 			return States[at];
 		}
 
-		internal Sequence Evolve(IEnumerable<Tuple<Sector.ID, Sequence>> n, ref int depth, ref int errors)
+		internal Sequence Evolve(IEnumerable<Tuple<Sector.ID, Sequence>> n, ref int depth, ref int errors, bool optimize)
 		{
-			return Update(n, ref depth, ref errors,States.Length+1);
+			return Update(n, ref depth, ref errors,States.Length+1, optimize);
 		}
 
 		internal Sequence Truncate(int maxDepth)

@@ -74,12 +74,26 @@ namespace TechniteSimulation
 				knownSequence = null;
 			}
 		}
-		static Random rng = new Random();
-		public void Fetch()
+
+		public int isolated = 0;
+
+		public void ToggleIsolation()
 		{
+			isolated += 100;
+
+		}
+
+		public void Fetch(Random rng, int frame)
+		{
+			if (isolated > 0)
+			{
+				isolated--;
+				return;
+			}
 			VisitNeighbors(delegate(Neighbor n)
 			{
-				if (rng.NextDouble() > 0.05)
+				//if (rng.NextDouble() > 0.05)
+				//if ((frame%3)==0)
 					n.knownSequence = n.Sector.sequence;
 			}
 			);
@@ -111,19 +125,22 @@ namespace TechniteSimulation
 
 		public int depth = 0;
 		public int errors = 0;
-		public void Update()
+		public void Update(bool optimize)
 		{
 			if (sequence.ConsistentRange == sequence.States.Length)
+			{
+				depth = 0;
 				return;
+			}
 			depth = sequence.MaxGeneration;
-			sequence = sequence.Update(NeighborSequences(), ref depth, ref errors,sequence.States.Length);
+			sequence = sequence.Update(NeighborSequences(), ref depth, ref errors,sequence.States.Length, optimize);
 			depth = sequence.MaxGeneration - depth;
 		}
 
-		public void Evolve()
+		public void Evolve(bool optimize)
 		{
 			depth = sequence.MaxGeneration+1;
-			sequence = sequence.Evolve(NeighborSequences(),ref depth, ref errors);
+			sequence = sequence.Evolve(NeighborSequences(),ref depth, ref errors, optimize);
 			depth = sequence.MaxGeneration - depth;
 		}
 

@@ -73,12 +73,14 @@ namespace TechniteSimulation
 
 		internal bool RelevantToEvolution(Sector.ID other, int generation)
 		{
+
+			//			val = val * 17 + generation;
+			////			Random rng = new Random(val);
+			//			float rnd = (float)(xorshf96(val)%0xFF) / 255.0f;
 			//return true;
-			int val = other.GetHashCode() * 17 + SectorID.GetHashCode();
-			val = val * 17 + generation;
-//			Random rng = new Random(val);
-			float rnd = (float)(xorshf96(val)%0xFF) / 255.0f;
-			return rnd < 0.1 / (SectorID.QuadraticDistanceTo(other));
+//			int val = other.GetHashCode() * 17 + SectorID.GetHashCode();
+			double rnd = PerlinNoise.Global.Noise(SectorID.X * 100 + (other.X-SectorID.X) * 10, SectorID.Y * 100 + (other.Y-SectorID.Y) * 10, (double)generation / 20.0f/* + val*/);
+			return Math.Abs(rnd) < 0.025 / (SectorID.QuadraticDistanceTo(other));
 		}
 
 		public static bool operator ==(State a, State b)
