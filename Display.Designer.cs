@@ -38,6 +38,7 @@
 			this.flushErrors = new System.Windows.Forms.Button();
 			this.simulate = new System.Windows.Forms.CheckBox();
 			this.drawGraph = new System.Windows.Forms.CheckBox();
+			this.splitSystem = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -52,7 +53,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.canvas.Location = new System.Drawing.Point(0, 45);
 			this.canvas.Name = "canvas";
-			this.canvas.Size = new System.Drawing.Size(444, 443);
+			this.canvas.Size = new System.Drawing.Size(553, 491);
 			this.canvas.TabIndex = 1;
 			this.canvas.Click += new System.EventHandler(this.canvas_Click);
 			this.canvas.Resize += new System.EventHandler(this.Display_ResizeEnd);
@@ -73,7 +74,7 @@
 			// 
 			this.commits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.commits.AutoSize = true;
-			this.commits.Location = new System.Drawing.Point(338, 13);
+			this.commits.Location = new System.Drawing.Point(447, 13);
 			this.commits.Name = "commits";
 			this.commits.Size = new System.Drawing.Size(106, 13);
 			this.commits.TabIndex = 3;
@@ -83,7 +84,7 @@
 			// 
 			this.offCommits.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.offCommits.AutoSize = true;
-			this.offCommits.Location = new System.Drawing.Point(390, 29);
+			this.offCommits.Location = new System.Drawing.Point(499, 29);
 			this.offCommits.Name = "offCommits";
 			this.offCommits.Size = new System.Drawing.Size(54, 13);
 			this.offCommits.TabIndex = 4;
@@ -103,7 +104,7 @@
 			// 
 			// flushErrors
 			// 
-			this.flushErrors.Location = new System.Drawing.Point(172, 2);
+			this.flushErrors.Location = new System.Drawing.Point(265, 2);
 			this.flushErrors.Name = "flushErrors";
 			this.flushErrors.Size = new System.Drawing.Size(166, 24);
 			this.flushErrors.TabIndex = 6;
@@ -135,11 +136,22 @@
 			this.drawGraph.UseVisualStyleBackColor = true;
 			this.drawGraph.CheckedChanged += new System.EventHandler(this.drawGraph_CheckedChanged);
 			// 
+			// splitSystem
+			// 
+			this.splitSystem.AutoSize = true;
+			this.splitSystem.Location = new System.Drawing.Point(159, 2);
+			this.splitSystem.Name = "splitSystem";
+			this.splitSystem.Size = new System.Drawing.Size(46, 17);
+			this.splitSystem.TabIndex = 9;
+			this.splitSystem.Text = "Split";
+			this.splitSystem.UseVisualStyleBackColor = true;
+			// 
 			// Display
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(445, 490);
+			this.ClientSize = new System.Drawing.Size(554, 538);
+			this.Controls.Add(this.splitSystem);
 			this.Controls.Add(this.drawGraph);
 			this.Controls.Add(this.simulate);
 			this.Controls.Add(this.flushErrors);
@@ -167,5 +179,6 @@
 		private System.Windows.Forms.Button flushErrors;
 		private System.Windows.Forms.CheckBox simulate;
 		private System.Windows.Forms.CheckBox drawGraph;
+		private System.Windows.Forms.CheckBox splitSystem;
 	}
 }

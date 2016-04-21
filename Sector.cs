@@ -196,7 +196,7 @@ namespace TechniteSimulation
 
 		}
 
-		public void Fetch(Random rng, int frame)
+		public void Fetch(Random rng, int frame, int splitAt)
 		{
 			if (isolated > 0)
 			{
@@ -205,7 +205,10 @@ namespace TechniteSimulation
 			}
 			VisitNeighbors(delegate(Neighbor n)
 			{
-				//if (rng.NextDouble() > 0.05)
+				if (Math.Sign(MyID.X - splitAt) != Math.Sign(n.Sector.MyID.X - splitAt))
+					return;
+
+				if (rng.NextDouble() > 0.25)
 				//if ((frame%3)==0)
 					n.knownSequence = n.Sector.sequence;
 			}

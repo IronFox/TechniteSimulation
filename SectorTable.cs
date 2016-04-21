@@ -40,11 +40,12 @@ namespace TechniteSimulation
 		Random rng = new Random(1024);
 
 
-		internal void Evolve(bool doEvolve, int frame, int maxHistoryLength, bool optimize)
+		internal void Evolve(bool doEvolve, int frame, int maxHistoryLength, bool optimize, bool split)
 		{
 			//Console.WriteLine(rng.Next());
+			int splitAt = split ? sectors.GetLength(0) / 2 : -1;
 			foreach (Sector s in sectors)
-				s.Fetch(rng,frame);
+				s.Fetch(rng,frame,splitAt);
 			Parallel.ForEach(sectors.Cast<Sector>(), (Sector s) =>
 			{
 				if (doEvolve) s.Evolve(optimize);
