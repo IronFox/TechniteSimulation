@@ -75,8 +75,8 @@ namespace TechniteSimulation
 					newList.Clear();
 					if (g < depth && reference.HasValue && newStates[newStates.Count() - 1] != reference.Value)
 					{
-						if (stateI == 1)
-							errors++;
+						//if (stateI == 1)
+							//errors++;
 						depth = g;
 					}
 					if (consistent)
@@ -133,9 +133,11 @@ namespace TechniteSimulation
 			return Update(n, ref depth, ref errors,States.Length+1, optimize);
 		}
 
-		internal Sequence Truncate(int maxDepth)
+		internal Sequence Truncate(int maxDepth, ref int errors)
 		{
 			int skip = States.Length - maxDepth;
+			if (ConsistentRange <= skip)
+				errors+=skip;
 			return new Sequence(States.Skip(skip), GenerationOffset + skip, Math.Max(0, ConsistentRange - skip),MyID,InconsistencySource);
 		}
 	}

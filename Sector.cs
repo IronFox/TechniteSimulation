@@ -262,7 +262,7 @@ namespace TechniteSimulation
 		public void Truncate(int maxDepth)
 		{
 			if (sequence.States.Length > maxDepth)
-				sequence = sequence.Truncate(maxDepth);
+				sequence = sequence.Truncate(maxDepth, ref errors);
 		}
 
 	}
