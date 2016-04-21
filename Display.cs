@@ -110,9 +110,9 @@ namespace TechniteSimulation
 				Pen p = new Pen(Color.Red);
 				foreach (var s in t.sectors)
 				{
-					if (s.sequence.PrimaryInconsistencySource != s.MyID)
+					if (s.sequence.InconsistencySource.IsNotEmpty)
 					{
-						DrawLine(p, rectangle.Location, w, h, s.MyID, s.sequence.PrimaryInconsistencySource);
+						DrawLine(p, rectangle.Location, w, h, s.MyID, s.sequence.InconsistencySource);
 
 					}
 				};
@@ -130,6 +130,16 @@ namespace TechniteSimulation
 		{
 			graphics.DrawLine(p, from.X * w + offset.X, from.Y * h + offset.Y,
 				to.X * w + offset.X, to.Y * h + offset.Y);
+		}
+		private void DrawLine(Pen p, Point offset, float w, float h, Sector.ID to, Sector.WeightedIDDelta from)
+		{
+			float x, y;
+			from.Export(out x, out y);
+			PointF p0 = new PointF((x + to.X) * w + offset.X, (y + to.Y) * h + offset.Y);
+			PointF p1 = new PointF(to.X * w + offset.X, to.Y * h + offset.Y);
+			//Pen p = new Pen(new System.Drawing.Drawing2D.LinearGradientBrush(p0, p1, Color.FromArgb(0, 255, 0, 0), Color.FromArgb(255, 0, 0)));
+			graphics.DrawLine(p, p0, p1);
+			//p.Dispose();
 		}
 
 		private void Display_ResizeEnd(object sender, EventArgs e)

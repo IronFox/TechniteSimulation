@@ -9,18 +9,19 @@ namespace TechniteSimulation
 		public readonly State[]		States;
 		public readonly int			GenerationOffset,
 									ConsistentRange;
-		public readonly Sector.ID	MyID,
-									PrimaryInconsistencySource;
+		public readonly Sector.ID	MyID;
+		public readonly Sector.WeightedIDDelta
+									InconsistencySource;
 
 		public int MaxGeneration { get { return GenerationOffset + States.Length - 1; } }
 
-		public Sequence(IEnumerable<State> states, int generation, int numConsistent, Sector.ID myID, Sector.ID primaryInconsistencySource)
+		public Sequence(IEnumerable<State> states, int generation, int numConsistent, Sector.ID myID, Sector.WeightedIDDelta inconsistencySource)
 		{
 			States = states.ToArray();
 			GenerationOffset = generation;
 			ConsistentRange = numConsistent;
 			MyID = myID;
-			PrimaryInconsistencySource = primaryInconsistencySource;
+			InconsistencySource = inconsistencySource;
 		}
 
 		internal Sequence Update(IEnumerable<Tuple<Sector.ID, Sequence>> otherParents, ref int depth, ref int errors, int numGenerations, bool optimize)
@@ -29,7 +30,7 @@ namespace TechniteSimulation
 			int consistentTo = 0;
 			bool consistent = true;
 			List<State> newList = new List<State>();
-			Sector.ID primaryInconsistencySource = MyID;
+			Sector.WeightedIDDelta iconsistencySource = new Sector.WeightedIDDelta();
 			for (int stateI = 0; stateI < numGenerations; stateI++)
 			{
 				int g = stateI + GenerationOffset;
@@ -49,9 +50,9 @@ namespace TechniteSimulation
 							{
 								newList.Add(c.Item2.Value);
 
-								if (c.Item3 == StateType.Inconsistent && consistent)
+								if (c.Item3 == StateType.Inconsistent)
 								{
-									primaryInconsistencySource = c.Item1;
+									iconsistencySource.Add(c.Item1 - MyID,numGenerations - stateI);
 									consistent = false;
 								}
 							}
@@ -62,11 +63,8 @@ namespace TechniteSimulation
 							{
 								if (c.Item3 == StateType.Truncated)
 									errors++;
-								if (consistent)
-								{
-									primaryInconsistencySource = c.Item1;
-									consistent = false;
-								}
+								iconsistencySource.Add(c.Item1 - MyID, numGenerations - stateI);
+								consistent = false;
 							}
 						}
 						
@@ -85,7 +83,7 @@ namespace TechniteSimulation
 						consistentTo++;
 				}
 			}
-			return new Sequence(newStates, GenerationOffset, consistentTo,MyID,primaryInconsistencySource);
+			return new Sequence(newStates, GenerationOffset, consistentTo,MyID,iconsistencySource);
 		}
 
 		public enum StateType
@@ -138,7 +136,7 @@ namespace TechniteSimulation
 		internal Sequence Truncate(int maxDepth)
 		{
 			int skip = States.Length - maxDepth;
-			return new Sequence(States.Skip(skip), GenerationOffset + skip, Math.Max(0, ConsistentRange - skip),MyID,PrimaryInconsistencySource);
+			return new Sequence(States.Skip(skip), GenerationOffset + skip, Math.Max(0, ConsistentRange - skip),MyID,InconsistencySource);
 		}
 	}
 }
