@@ -50,10 +50,10 @@ namespace TechniteSimulation
 			if (doEvolve.Checked)
 				foreach (var t in Program.tables)
 				{
-					t.Evolve(false, frame, MaxHistoryLength, true, splitSystem.Checked);
+					t.Evolve(false, frame, MaxHistoryLength, true, splitSystem.Checked,(float)errorLevel.Value / 100f);
 				}
 			foreach (var t in Program.tables)
-				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength,true, splitSystem.Checked);
+				t.Evolve(doEvolve.Checked, frame, MaxHistoryLength,true, splitSystem.Checked, (float)errorLevel.Value / 100f);
 
 			RepaintTables();
 			commits.Text = Program.tables[0].sectors[0,0].sequence.MaxGeneration.ToString();

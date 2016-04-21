@@ -39,6 +39,9 @@
 			this.simulate = new System.Windows.Forms.CheckBox();
 			this.drawGraph = new System.Windows.Forms.CheckBox();
 			this.splitSystem = new System.Windows.Forms.CheckBox();
+			this.errorLevel = new System.Windows.Forms.TrackBar();
+			this.label1 = new System.Windows.Forms.Label();
+			((System.ComponentModel.ISupportInitialize)(this.errorLevel)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// timer1
@@ -51,9 +54,9 @@
 			this.canvas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.canvas.Location = new System.Drawing.Point(0, 45);
+			this.canvas.Location = new System.Drawing.Point(0, 76);
 			this.canvas.Name = "canvas";
-			this.canvas.Size = new System.Drawing.Size(553, 491);
+			this.canvas.Size = new System.Drawing.Size(553, 460);
 			this.canvas.TabIndex = 1;
 			this.canvas.Click += new System.EventHandler(this.canvas_Click);
 			this.canvas.Resize += new System.EventHandler(this.Display_ResizeEnd);
@@ -104,7 +107,7 @@
 			// 
 			// flushErrors
 			// 
-			this.flushErrors.Location = new System.Drawing.Point(265, 2);
+			this.flushErrors.Location = new System.Drawing.Point(0, 48);
 			this.flushErrors.Name = "flushErrors";
 			this.flushErrors.Size = new System.Drawing.Size(166, 24);
 			this.flushErrors.TabIndex = 6;
@@ -146,11 +149,34 @@
 			this.splitSystem.Text = "Split";
 			this.splitSystem.UseVisualStyleBackColor = true;
 			// 
+			// errorLevel
+			// 
+			this.errorLevel.LargeChange = 20;
+			this.errorLevel.Location = new System.Drawing.Point(268, 2);
+			this.errorLevel.Maximum = 100;
+			this.errorLevel.Name = "errorLevel";
+			this.errorLevel.Size = new System.Drawing.Size(122, 45);
+			this.errorLevel.SmallChange = 5;
+			this.errorLevel.TabIndex = 10;
+			this.errorLevel.TickFrequency = 10;
+			this.errorLevel.Value = 25;
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(227, 6);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(40, 13);
+			this.label1.TabIndex = 11;
+			this.label1.Text = "Error%:";
+			// 
 			// Display
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(554, 538);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.errorLevel);
 			this.Controls.Add(this.splitSystem);
 			this.Controls.Add(this.drawGraph);
 			this.Controls.Add(this.simulate);
@@ -163,6 +189,7 @@
 			this.Name = "Display";
 			this.Text = "Display";
 			this.ResizeEnd += new System.EventHandler(this.Display_ResizeEnd);
+			((System.ComponentModel.ISupportInitialize)(this.errorLevel)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -180,5 +207,7 @@
 		private System.Windows.Forms.CheckBox simulate;
 		private System.Windows.Forms.CheckBox drawGraph;
 		private System.Windows.Forms.CheckBox splitSystem;
+		private System.Windows.Forms.TrackBar errorLevel;
+		private System.Windows.Forms.Label label1;
 	}
 }

@@ -196,7 +196,7 @@ namespace TechniteSimulation
 
 		}
 
-		public void Fetch(Random rng, int frame, int splitAt)
+		public void Fetch(Random rng, int frame, int splitAt, float errorLevel)
 		{
 			if (isolated > 0)
 			{
@@ -208,8 +208,7 @@ namespace TechniteSimulation
 				if (Math.Sign(MyID.X - splitAt) != Math.Sign(n.Sector.MyID.X - splitAt))
 					return;
 
-				if (rng.NextDouble() > 0.25)
-				//if ((frame%3)==0)
+				if (rng.NextDouble() >= errorLevel)
 					n.knownSequence = n.Sector.sequence;
 			}
 			);
