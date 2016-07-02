@@ -24,11 +24,11 @@ namespace TechniteSimulation
 
 		static int frame = 0;
 
-		const int MaxHistoryLength = 32;
+		const int MaxHistoryLength = 64;
 
 		private Color GetColor(Sector sector, bool colorErrors)
 		{
-			int bad = 255 * sector.depth / MaxHistoryLength;
+			int bad = 0;// 255 * sector.depth / MaxHistoryLength;
 
 			//int oldest = sector.sequence.Generation - 1;
 			//if (sector.commit.otherParents != null)
@@ -105,18 +105,12 @@ namespace TechniteSimulation
 
 			graphics.DrawImage(image, rectangle);
 
-			if (drawGraph.Checked)
-			{
-				Pen p = new Pen(Color.Red);
-				foreach (var s in t.sectors)
-				{
-					if (s.sequence.InconsistencySource.IsNotEmpty)
-					{
-						DrawLine(p, rectangle.Location, w, h, s.MyID, s.sequence.InconsistencySource);
 
-					}
-				};
+			for (int x = 0; x < t.sectors.GetLength(0); x++)
+			{
+				DrawSequence(t.sectors[x, 1].sequence,x,w,h);
 			}
+
 
 			//for (int x = 0; x < t.sectors.GetLength(0); x++)
 			//	for (int y = 0; y < t.sectors.GetLength(0); y++)
@@ -125,6 +119,30 @@ namespace TechniteSimulation
 			//	}
 
 		}
+
+		private void DrawSequence(Sequence sequence, int x, float w, float h)
+		{
+			int d0 = 0,d1 = 0;
+			for (int i = sequence.States.Length-1; i >= 0; i--)
+			{
+				ushort inc = sequence.States[i].InconsistentCells;
+				if ((inc & 0x00f0) != 0)//right
+					d1++;
+				if ((inc & 0x0f00) != 0)//left
+					d0++;
+				if (inc == 0)
+					break;
+			}
+
+			if (d0 == 0 && d1 == 0)
+				return;
+			graphics.DrawLine(p, (x) * w, d0 * h, (0.5f + x) * w, d0 * h);
+			graphics.DrawLine(p, (0.5f+x) * w, d1 * h, (1f + x) * w, d1 * h);
+
+	}
+
+		Pen p = new Pen(Color.White);
+
 
 		private void DrawLine(Pen p, Point offset, float w, float h, Sector.ID to, Sector.ID from)
 		{

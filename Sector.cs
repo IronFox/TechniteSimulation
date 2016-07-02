@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TechniteSimulation
 {
@@ -76,9 +77,27 @@ namespace TechniteSimulation
 				return z;
 			}
 
+			public int Domain (int generation)
+			{
+				
+				{
+					double rnd0 = PerlinNoise.Global.Noise(Math.PI * (X ), Math.E * (Y ), 10.3+0.1*generation);
+					double rnd1 = PerlinNoise.Global.Noise(Math.PI * (X ), Math.E * (Y ), 0.9+0.1*generation);
+					double rnd2 = PerlinNoise.Global.Noise(Math.PI * (X ), Math.E * (Y ), 100.6+0.1*generation);
+					return ((rnd0 > 0) ? 1 : 0)
+						|
+						((rnd1 > 0) ? 2 : 0)
+						|
+						((rnd2 > 0) ? 4 : 0)
+						;
+				}
+			}
+
 			internal bool RelevantToEvolution(ID other, int generation)
 			{
-
+				return true;
+				return (Domain(generation) & other.Domain(generation)) != 0;
+				//return true;
 				//			val = val * 17 + generation;
 				////			Random rng = new Random(val);
 				//			float rnd = (float)(xorshf96(val)%0xFF) / 255.0f;
@@ -168,7 +187,7 @@ namespace TechniteSimulation
 		public Sector(ID id)
 		{
 			MyID = id;
-			sequence = new Sequence(new State[] { new State(id, 0) },0,1,id,new WeightedIDDelta());
+			sequence = new Sequence(new State[] { new State() },0,1,id);
 		}
 		//public NeighborAxis[] Neighbors = new NeighborAxis[2];
 
@@ -203,8 +222,12 @@ namespace TechniteSimulation
 				isolated--;
 				return;
 			}
+			//if (splitAt > 0 && MyID == new ID(50, 50))
+				//return;
 			VisitNeighbors(delegate(Neighbor n)
 			{
+				//if (splitAt > 0 && n.Sector.MyID == new ID(50, 50))
+					//return;
 				if (Math.Sign(MyID.X - splitAt) != Math.Sign(n.Sector.MyID.X - splitAt))
 					return;
 
@@ -250,6 +273,7 @@ namespace TechniteSimulation
 			depth = sequence.MaxGeneration;
 			sequence = sequence.Update(NeighborSequences(), ref depth, ref errors,sequence.States.Length, optimize);
 			depth = sequence.MaxGeneration - depth;
+			Debug.Assert(depth >= 0);
 		}
 
 		public void Evolve(bool optimize)
@@ -257,6 +281,7 @@ namespace TechniteSimulation
 			depth = sequence.MaxGeneration+1;
 			sequence = sequence.Evolve(NeighborSequences(),ref depth, ref errors, optimize);
 			depth = sequence.MaxGeneration - depth;
+			Debug.Assert(depth >= 0);
 		}
 
 		public void Truncate(int maxDepth)

@@ -159,7 +159,6 @@
 			this.errorLevel.SmallChange = 5;
 			this.errorLevel.TabIndex = 10;
 			this.errorLevel.TickFrequency = 10;
-			this.errorLevel.Value = 25;
 			// 
 			// label1
 			// 
